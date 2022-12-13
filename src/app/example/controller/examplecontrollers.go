@@ -7,8 +7,25 @@ import (
 	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/model"
 	database "github.com/faisd405/go-restapi-chi/src/config"
 	"github.com/go-chi/chi/v5"
+	"github.com/go-playground/validator/v10"
 	"gorm.io/gorm"
 )
+
+// use a single instance of Validate, it caches struct info
+var validate *validator.Validate
+
+func errorHandler(w http.ResponseWriter, r *http.Request, err error, httpStatus, message string) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusInternalServerError)
+	if message == "" {
+		message = "Internal server error"
+	}
+	json.NewEncoder(w).Encode(map[string]interface{}{
+		"status":  "error",
+		"message": message,
+		"error":   err.Error(),
+	})
+}
 
 func Index(w http.ResponseWriter, r *http.Request) {
 	var examples []exampleModel.Example
@@ -41,6 +58,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
 				"message": "Data not found",
 			})
 			return
+			// errorHandler(w, r, err, "Example not found")
 		default:
 			w.Header().Set("Content-Type", "application/json")
 			w.WriteHeader(http.StatusInternalServerError)
@@ -49,6 +67,7 @@ func Show(w http.ResponseWriter, r *http.Request) {
 				"message": "Internal server error",
 			})
 			return
+			// errorHandler(w, r, err, "")
 		}
 	}
 
@@ -75,6 +94,18 @@ func Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	validate = validator.New()
+	err = validate.Struct(example)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  "error",
+			"message": err.Error(),
+		})
+		return
+	}
+
 	database.DB.Create(&example)
 
 	w.Header().Set("Content-Type", "application/json")
@@ -97,6 +128,18 @@ func Update(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(map[string]interface{}{
 			"status":  "error",
 			"message": "Invalid request body",
+		})
+		return
+	}
+
+	validate = validator.New()
+	err = validate.Struct(example)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(map[string]interface{}{
+			"status":  "error",
+			"message": err.Error(),
 		})
 		return
 	}
