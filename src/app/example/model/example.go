@@ -1,7 +1,16 @@
 package model
 
+import "gorm.io/gorm"
+
 type Example struct {
-	Id       int64  `gorm:"primaryKey" json:"id"`
-	Example1 string `gorm:"type:varchar(191)" json:"example1" validate:"required"`
-	Example2 string `gorm:"type:text" json:"example2" validate:"required"`
+	gorm.Model
+	Example1 string `json:"example1" gorm:"type:varchar(191)" validate:"required"`
+	Example2 string `json:"example2" gorm:"type:text" validate:"required"`
+}
+
+func NewExample(example1 string, example2 string) Example {
+	return Example{
+		Example1: example1,
+		Example2: example2,
+	}
 }
