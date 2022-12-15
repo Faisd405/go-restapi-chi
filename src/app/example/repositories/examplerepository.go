@@ -5,6 +5,7 @@ import (
 
 	exampleInterface "github.com/faisd405/go-restapi-chi/src/app/example/interfaces"
 	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/model"
+	"github.com/faisd405/go-restapi-chi/src/helper/database"
 	"gorm.io/gorm"
 )
 
@@ -12,9 +13,10 @@ type exampleRepository struct {
 	DB *gorm.DB
 }
 
-func (repository *exampleRepository) FindAll(ctx context.Context) ([]exampleModel.Example, error) {
+func (repository *exampleRepository) FindAll(ctx context.Context, params map[string]string) ([]exampleModel.Example, error) {
 	var example = []exampleModel.Example{}
-	result := repository.DB.Find(&example)
+
+	result := repository.DB.Scopes(database.Paginate(params)).Find(&example)
 	return example, result.Error
 }
 

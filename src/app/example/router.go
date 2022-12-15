@@ -3,7 +3,7 @@ package router
 import (
 	"net/http"
 
-	ExampleHandler "github.com/faisd405/go-restapi-chi/src/app/example/handler"
+	ExampleHandler "github.com/faisd405/go-restapi-chi/src/app/example/handlers"
 	ExampleRepository "github.com/faisd405/go-restapi-chi/src/app/example/repositories"
 	ExampleService "github.com/faisd405/go-restapi-chi/src/app/example/services"
 	"github.com/faisd405/go-restapi-chi/src/config"

@@ -1,4 +1,4 @@
-package handler
+package handlers
 
 import (
 	"net/http"
@@ -26,7 +26,19 @@ func NewExampleHandler(exampleService exampleInterface.ExampleService) *exampleH
 // var validate *validator.Validate
 
 func (handler *exampleHandler) Index(w http.ResponseWriter, r *http.Request) {
-	example, err := handler.ExampleService.FindAll(r.Context())
+	params := map[string]string{}
+
+	if r.URL.Query().Get("example1") != "" {
+		params["example1"] = r.URL.Query().Get("example1")
+	}
+	if r.URL.Query().Get("limit") != "" {
+		params["limit"] = r.URL.Query().Get("limit")
+	}
+	if r.URL.Query().Get("currentPage") != "" {
+		params["currentPage"] = r.URL.Query().Get("currentPage")
+	}
+
+	example, err := handler.ExampleService.FindAll(r.Context(), params)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return

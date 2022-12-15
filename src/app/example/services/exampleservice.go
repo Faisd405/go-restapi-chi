@@ -11,8 +11,8 @@ type exampleService struct {
 	exampleRepository exampleInterface.ExampleRepository
 }
 
-func (service *exampleService) FindAll(ctx context.Context) ([]exampleModel.Example, error) {
-	return service.exampleRepository.FindAll(ctx)
+func (service *exampleService) FindAll(ctx context.Context, params map[string]string) ([]exampleModel.Example, error) {
+	return service.exampleRepository.FindAll(ctx, params)
 }
 
 func (service *exampleService) FindById(ctx context.Context, id uint) (exampleModel.Example, error) {
