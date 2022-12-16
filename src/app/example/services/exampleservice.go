@@ -4,7 +4,7 @@ import (
 	"context"
 
 	exampleInterface "github.com/faisd405/go-restapi-chi/src/app/example/interfaces"
-	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/model"
+	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/models"
 )
 
 type exampleService struct {

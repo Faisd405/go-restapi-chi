@@ -1,7 +1,8 @@
 package config
 
 import (
-	example "github.com/faisd405/go-restapi-chi/src/app/example/model"
+	auth "github.com/faisd405/go-restapi-chi/src/app/auth/models"
+	example "github.com/faisd405/go-restapi-chi/src/app/example/models"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,7 @@ func ConnectDatabase() {
 	}
 
 	database.AutoMigrate(&example.Example{})
+	database.AutoMigrate(&auth.User{})
 
 	DB = database
 }

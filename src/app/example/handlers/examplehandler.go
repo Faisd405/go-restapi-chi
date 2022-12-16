@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	exampleInterface "github.com/faisd405/go-restapi-chi/src/app/example/interfaces"
-	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/model"
+	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/models"
 	exampleRequest "github.com/faisd405/go-restapi-chi/src/app/example/request"
 	"github.com/faisd405/go-restapi-chi/src/helper/database"
 	"github.com/faisd405/go-restapi-chi/src/utils"

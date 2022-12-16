@@ -3,7 +3,7 @@ package interfaces
 import (
 	"context"
 
-	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/model"
+	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/models"
 )
 
 type ExampleRepository interface {
