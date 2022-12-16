@@ -7,6 +7,7 @@ import (
 	exampleInterface "github.com/faisd405/go-restapi-chi/src/app/example/interfaces"
 	exampleModel "github.com/faisd405/go-restapi-chi/src/app/example/model"
 	exampleRequest "github.com/faisd405/go-restapi-chi/src/app/example/request"
+	"github.com/faisd405/go-restapi-chi/src/helper/database"
 	"github.com/faisd405/go-restapi-chi/src/utils"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-playground/validator/v10"
@@ -26,17 +27,8 @@ func NewExampleHandler(exampleService exampleInterface.ExampleService) *exampleH
 // var validate *validator.Validate
 
 func (handler *exampleHandler) Index(w http.ResponseWriter, r *http.Request) {
-	params := map[string]string{}
 
-	if r.URL.Query().Get("example1") != "" {
-		params["example1"] = r.URL.Query().Get("example1")
-	}
-	if r.URL.Query().Get("limit") != "" {
-		params["limit"] = r.URL.Query().Get("limit")
-	}
-	if r.URL.Query().Get("currentPage") != "" {
-		params["currentPage"] = r.URL.Query().Get("currentPage")
-	}
+	params := database.BuildParams(r)
 
 	example, err := handler.ExampleService.FindAll(r.Context(), params)
 	if err != nil {
@@ -44,7 +36,14 @@ func (handler *exampleHandler) Index(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJson(w, example)
+	result := map[string]interface{}{
+		"status":      "success",
+		"data":        example,
+		"limit":       params["limit"],
+		"currentPage": params["currentPage"],
+	}
+
+	utils.WriteJson(w, result)
 }
 
 func (handler *exampleHandler) Show(w http.ResponseWriter, r *http.Request) {
@@ -57,11 +56,22 @@ func (handler *exampleHandler) Show(w http.ResponseWriter, r *http.Request) {
 
 	example, err := handler.ExampleService.FindById(r.Context(), uint(ID))
 	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
+		w.WriteHeader(http.StatusNotFound)
+		result := map[string]interface{}{
+			"status":  "error",
+			"message": "Example not found",
+		}
+
+		utils.WriteJson(w, result)
 		return
 	}
 
-	utils.WriteJson(w, example)
+	result := map[string]interface{}{
+		"status": "success",
+		"data":   example,
+	}
+
+	utils.WriteJson(w, result)
 }
 
 func (handler *exampleHandler) Create(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +100,13 @@ func (handler *exampleHandler) Create(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJson(w, example)
+	result := map[string]interface{}{
+		"status":  "success",
+		"message": "Example created successfully",
+		"data":    example,
+	}
+
+	utils.WriteJson(w, result)
 }
 
 func (handler *exampleHandler) Update(w http.ResponseWriter, r *http.Request) {
@@ -126,7 +142,13 @@ func (handler *exampleHandler) Update(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	utils.WriteJson(w, example)
+	result := map[string]interface{}{
+		"status":  "success",
+		"message": "Example updated successfully",
+		"data":    example,
+	}
+
+	utils.WriteJson(w, result)
 
 }
 
@@ -143,4 +165,11 @@ func (handler *exampleHandler) Delete(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+
+	result := map[string]interface{}{
+		"status":  "success",
+		"message": "Example deleted successfully",
+	}
+
+	utils.WriteJson(w, result)
 }
