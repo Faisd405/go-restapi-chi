@@ -3,7 +3,8 @@ package router
 import (
 	"net/http"
 
-	examplerouter "github.com/faisd405/go-restapi-chi/src/app/example"
+	authRouter "github.com/faisd405/go-restapi-chi/src/app/auth"
+	exampleRouter "github.com/faisd405/go-restapi-chi/src/app/example"
 	homecontroller "github.com/faisd405/go-restapi-chi/src/app/home/controller"
 
 	customMiddleware "github.com/faisd405/go-restapi-chi/src/middleware"
@@ -23,7 +24,8 @@ func Router() http.Handler {
 	r.Get("/", homecontroller.Index)
 
 	r.Route("/api", func(r chi.Router) {
-		r.Mount("/example", examplerouter.ExampleRouter())
+		r.Mount("/example", exampleRouter.ExampleRouter())
+		r.Mount("/auth", authRouter.AuthRouter())
 	})
 
 	return r

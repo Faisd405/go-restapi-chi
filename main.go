@@ -31,8 +31,8 @@ func main() {
 
 	// Create a new router
 	r := router.Router()
-	fmt.Printf("Server %s started on: http://127.0.0.1:%s", appName, port)
+	fmt.Printf("Server %s started on: http://127.0.0.1:%s \n", appName, port)
 
 	// Start the server
-	http.ListenAndServe(port, r)
+	http.ListenAndServe("127.0.0.1:3000", r)
 }

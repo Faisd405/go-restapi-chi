@@ -7,8 +7,10 @@ import (
 	ExampleRepository "github.com/faisd405/go-restapi-chi/src/app/example/repositories"
 	ExampleService "github.com/faisd405/go-restapi-chi/src/app/example/services"
 	"github.com/faisd405/go-restapi-chi/src/config"
+	globalUtils "github.com/faisd405/go-restapi-chi/src/utils"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 func ExampleRouter() http.Handler {
@@ -20,9 +22,16 @@ func ExampleRouter() http.Handler {
 	r := chi.NewRouter()
 	r.Get("/", handlers.Index)
 	r.Get("/{id}", handlers.Show)
-	r.Post("/", handlers.Create)
-	r.Patch("/{id:[0-9]+}", handlers.Update)
-	r.Delete("/{id:[0-9]+}", handlers.Delete)
+
+	r.Group(func(r chi.Router) {
+		// Seek, verify and validate JWT tokens
+		r.Use(jwtauth.Verifier(globalUtils.TokenAuth))
+		r.Use(jwtauth.Authenticator)
+
+		r.Post("/", handlers.Create)
+		r.Patch("/{id}", handlers.Update)
+		r.Delete("/{id}", handlers.Delete)
+	})
 
 	return r
 }
